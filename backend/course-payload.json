@@ -1,0 +1,70 @@
+{
+  "courseData": {
+    "title": "Relational Database Mastery",
+    "scope": "Beginner",
+    "description": "A practical, ground-up guide to designing and building scalable backend databases.",
+    "notes": "Ensure you have a basic understanding of web servers before starting.",
+    "category": "programming",
+    "price_etb": 0,
+    "video_url": "https://www.youtube.com/watch?v=HXV3zeQKqGY",
+    "thumbnail_url": "https://img.youtube.com/vi/HXV3zeQKqGY/maxresdefault.jpg"
+  },
+  "syllabus": [
+    {
+      "title": "Section 1: The Foundations of SQL",
+      "materials": [
+        {
+          "type": "video",
+          "title": "What is a Relational Database?",
+          "content": "https://www.youtube.com/watch?v=HXV3zeQKqGY"
+        },
+        {
+          "type": "note",
+          "title": "Basic CRUD Operations Summary",
+          "content": "All database interactions boil down to Create (INSERT), Read (SELECT), Update (UPDATE), and Delete (DELETE)."
+        }
+      ]
+    },
+    {
+      "title": "Section 2: Designing the Architecture",
+      "materials": [
+        {
+          "type": "video",
+          "title": "Primary Keys and Foreign Keys",
+          "content": "https://www.youtube.com/watch?v=1057PTNAJOI"
+        },
+        {
+          "type": "note",
+          "title": "Cascading Deletions",
+          "content": "Using ON DELETE CASCADE ensures dependent records (like materials in a section) are wiped out if the parent record is deleted."
+        }
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "question_text": "What does the acronym CRUD stand for?",
+      "option_a": "Create, Read, Update, Delete",
+      "option_b": "Compile, Run, Undo, Deploy",
+      "option_c": "Create, Render, Upload, Destroy",
+      "option_d": "Compute, Read, Update, Deploy",
+      "correct_option": "option_a"
+    },
+    {
+      "question_text": "Which SQL keyword is used to extract data from a table?",
+      "option_a": "GET",
+      "option_b": "SELECT",
+      "option_c": "EXTRACT",
+      "option_d": "PULL",
+      "correct_option": "option_b"
+    },
+    {
+      "question_text": "What happens if ON DELETE CASCADE is applied and a parent row is deleted?",
+      "option_a": "The deletion is blocked.",
+      "option_b": "The database crashes.",
+      "option_c": "The corresponding child rows are also deleted.",
+      "option_d": "The child rows are set to NULL.",
+      "correct_option": "option_c"
+    }
+  ]
+}
