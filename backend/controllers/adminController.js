@@ -1,5 +1,4 @@
 const db = require('../config/db');
-
 /* =====================================================================
    SkillAddis — Admin / Superadmin controller
    All handlers below are mounted behind verifyToken + requireRole('admin').
