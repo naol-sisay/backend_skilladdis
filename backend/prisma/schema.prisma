@@ -14,7 +14,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("mysql://avnadmin:AVNS_BcVln1oiHapXMcL4fvb@mysql-bdf8b65-naolsisay3-436a.g.aivencloud.com:25861/defaultdb?sslaccept=accept_invalid_certs")
+  url      = env("DATABASE_URL")
 }
 
 model User {
