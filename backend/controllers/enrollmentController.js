@@ -19,7 +19,8 @@ exports.enrollInCourse = async (req, res) => {
 
     try {
         // 2. Check if the course exists and is approved
-        const [courseRows] = await db.query('SELECT price_etb FROM courses WHERE course_id = ? AND status = "approved"', [course_id]);
+       // Note the outer double quotes and inner single quotes
+const [courseRows] = await db.query("SELECT price_etb FROM courses WHERE course_id = ? AND status = 'approved'", [course_id]);
         if (courseRows.length === 0) {
             return res.status(404).json({ error: 'Course not found or not available for enrollment.' });
         }

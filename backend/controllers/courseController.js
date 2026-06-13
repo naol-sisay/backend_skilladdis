@@ -6,20 +6,17 @@ exports.createCourse = async (req, res) => {
     const { title, scope, description, notes, category, price_etb, video_url, thumbnail_url } = req.body;
     const instructor_id = req.user.user_id; 
 
-    // Validation relaxed: thumbnail_url is no longer strictly required
     if (!title || !description || !category || price_etb === undefined || !video_url) {
         return res.status(400).json({ error: 'Missing required fields. Video URL is mandatory.' });
     }
 
-    // 1. Grab a dedicated database connection for the transaction
     const connection = await db.getConnection();
 
     try {
-        // 2. Start the transaction (lock the database state)
         await connection.beginTransaction();
 
         const course_id = uuidv4();
-        const exam_id = `exam-${uuidv4().slice(0, 8)}`; // Generate the Exam ID immediately
+        const exam_id = `exam-${uuidv4().slice(0, 8)}`; 
         const status = 'approved'; 
 
         const courseQuery = `
@@ -27,32 +24,25 @@ exports.createCourse = async (req, res) => {
             (course_id, instructor_id, title, scope, description, notes, category, price_etb, video_url, thumbnail_url, status) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-        
-        // 3. Insert the Course
         await connection.query(courseQuery, [course_id, instructor_id, title, scope, description, notes, category, price_etb, video_url, thumbnail_url, status]);
 
         const examQuery = `
             INSERT INTO exams (exam_id, course_id, minimum_pass_score) 
             VALUES (?, ?, ?)
         `;
-        
-        // 4. Insert the empty Exam wrapper linked to the new course (Default 70% to pass)
         await connection.query(examQuery, [exam_id, course_id, 70]);
 
-        // 5. Commit the transaction (save both permanently)
         await connection.commit();
 
-        // 6. Return BOTH IDs to React
         res.status(201).json({
             success: true,
             course_id: course_id,
-            exam_id: exam_id, // React now receives this and populates line 10!
+            exam_id: exam_id, 
             status: status,
             message: 'Course and Exam initialized successfully.'
         });
 
     } catch (error) {
-        // 7. If anything fails, rollback everything so we don't get orphaned data
         await connection.rollback(); 
         
         if (error.code === 'ER_DUP_ENTRY') {
@@ -61,7 +51,6 @@ exports.createCourse = async (req, res) => {
         console.error('Create Course Error:', error);
         res.status(500).json({ error: 'Database error while creating course and exam.' });
     } finally {
-        // 8. Always release the connection back to the pool
         connection.release(); 
     }
 };
@@ -76,12 +65,13 @@ exports.getApprovedCourses = async (req, res) => {
         `;
         let queryParams = [];
 
-        // If a search term is provided, append the WHERE clauses dynamically
         if (searchQuery) {
             query += ` AND (title LIKE ? OR description LIKE ? OR category LIKE ?)`;
             const likeTerm = `%${searchQuery}%`;
             queryParams.push(likeTerm, likeTerm, likeTerm);
         }
+
+        query += ` ORDER BY created_at DESC`;
 
         const [rows] = await db.query(query, queryParams);
 
@@ -95,37 +85,39 @@ exports.getApprovedCourses = async (req, res) => {
         res.status(500).json({ error: 'Database error while fetching courses.' });
     }
 };
-// Add this below your existing controller functions
+
 exports.getFullCourseSyllabus = async (req, res) => {
     const { courseId } = req.params;
 
     try {
         // 1. Fetch Course Metadata
-        const [courseRows] = await db.query('SELECT * FROM courses WHERE course_id = ?', [courseId]);
+        const [courseRows] = await db.query('SELECT * FROM courses WHERE course_id = ? AND status = "approved"', [courseId]);
         if (courseRows.length === 0) return res.status(404).json({ error: 'Course not found' });
         const course = courseRows[0];
 
-        // 2. Fetch Sections ordered by sequence
-        const [sections] = await db.query('SELECT * FROM course_sections WHERE course_id = ? ORDER BY sequence_order ASC', [courseId]);
+        // 2. Fetch Sections
+        const [sections] = await db.query('SELECT section_id, title FROM course_sections WHERE course_id = ? ORDER BY sequence_order ASC', [courseId]);
 
-        // 3. Fetch Materials for those sections
-        const sectionIds = sections.map(s => s.section_id);
+        // 3. Fetch Materials efficiently (preventing empty array SQL crashes)
         let materials = [];
-        if (sectionIds.length > 0) {
-            // Using parameterized IN clause for security
-            const [mats] = await db.query('SELECT * FROM course_materials WHERE section_id IN (?) ORDER BY sequence_order ASC', [sectionIds]);
+        if (sections.length > 0) {
+            const sectionIds = sections.map(s => s.section_id);
+            // Alias material_type to type so React handles it properly
+            const [mats] = await db.query('SELECT material_id, section_id, material_type as type, title, content FROM course_materials WHERE section_id IN (?) ORDER BY sequence_order ASC', [sectionIds]);
             materials = mats;
         }
 
-        // 4. Fetch Exam Metadata (We explicitly DO NOT fetch answers here to prevent cheating via client-side inspection)
+        // 4. Fetch Exam Metadata
         const [exams] = await db.query('SELECT exam_id, title, minimum_pass_score FROM exams WHERE course_id = ?', [courseId]);
 
-        // 5. Assemble the Hierarchical JSON Tree
+        // 5. Assemble Hierarchical Tree
         const syllabus = sections.map(section => ({
-            ...section,
+            section_id: section.section_id,
+            title: section.title,
             materials: materials.filter(m => m.section_id === section.section_id)
         }));
 
+        // Your CoursePlayer.jsx expects res.data.course and res.data.syllabus
         res.status(200).json({
             success: true,
             course: course,
@@ -138,49 +130,7 @@ exports.getFullCourseSyllabus = async (req, res) => {
         res.status(500).json({ error: 'Failed to construct course hierarchy.' });
     }
 };
-exports.getFullCourseSyllabus = async (req, res) => {
-    const { courseId } = req.params;
-    
-    try {
-        // 1. Fetch the base course details
-        const [courses] = await db.query('SELECT * FROM courses WHERE course_id = ?', [courseId]);
-        
-        if (courses.length === 0) {
-            return res.status(404).json({ error: 'Course not found' });
-        }
-        const course = courses[0];
 
-        // 2. Fetch all sections for this course
-        const [sections] = await db.query(
-            'SELECT * FROM course_sections WHERE course_id = ? ORDER BY sequence_order ASC', 
-            [courseId]
-        );
-
-        // 3. Fetch materials for each section and build the nested array
-        const syllabus = [];
-        for (let section of sections) {
-            const [materials] = await db.query(
-                'SELECT * FROM course_materials WHERE section_id = ? ORDER BY sequence_order ASC', 
-                [section.section_id]
-            );
-            
-            syllabus.push({
-                ...section,
-                materials: materials
-            });
-        }
-
-        // 4. Send the hierarchical data back to React
-        res.json({
-            course: course,
-            syllabus: syllabus
-        });
-
-    } catch (error) {
-        console.error("Database error fetching syllabus:", error);
-        res.status(500).json({ error: 'Failed to retrieve course curriculum.' });
-    }
-};
 exports.updateCourseSyllabus = async (req, res) => {
     const { courseId } = req.params;
     const { syllabus } = req.body; 
@@ -194,11 +144,8 @@ exports.updateCourseSyllabus = async (req, res) => {
     try {
         await connection.beginTransaction(); 
 
-        // 1. DROP THE OLD: Delete existing sections. 
-        // (ON DELETE CASCADE in MySQL automatically wipes the attached materials).
         await connection.query('DELETE FROM course_sections WHERE course_id = ?', [courseId]);
 
-        // 2. INSERT THE NEW: Loop and write the new hierarchy
         for (let i = 0; i < syllabus.length; i++) {
             const section_id = uuidv4();
             const section = syllabus[i];
@@ -236,22 +183,20 @@ exports.updateCourseSyllabus = async (req, res) => {
         connection.release(); 
     }
 };
+
 exports.getCertificate = async (req, res) => {
     const { certificateId } = req.params;
     
     try {
-        // 1. Get the base certificate record
         const [certRows] = await db.query("SELECT * FROM certificates WHERE certificate_id = ?", [certificateId]);
         if (certRows.length === 0) return res.status(404).json({ error: "Certificate not found." });
         
         const cert = certRows[0];
 
-        // 2. Safely fetch the Student's name (Adjust 'full_name' or 'name' to match your users table schema)
         const [userRows] = await db.query("SELECT full_name FROM users WHERE user_id = ?", [cert.user_id]);
         const studentName = userRows.length > 0 ? userRows[0].full_name : "Unknown Student";
 
-        // 3. Safely fetch the Course title
-        const [courseRows] = await db.query("SELECT title FROM courses WHERE course_id = ?", [cert.course_id]);
+       const [courseRows] = await db.query("SELECT * FROM courses WHERE course_id = ? AND status = 'approved'", [courseId]);
         const courseTitle = courseRows.length > 0 ? courseRows[0].title : "SkillAddis Course";
 
         res.status(200).json({

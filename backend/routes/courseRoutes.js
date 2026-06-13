@@ -23,23 +23,24 @@ const {
 } = require("../controllers/examController");
 
 // ==========================================
-// ROUTES (Assuming mounted at /api/courses)
+// ROUTES (Mounted at /api/courses)
 // ==========================================
 
-// 1. STATIC ROUTES (Must go first)
+// 1. PUBLIC ROUTES (Safe to expose to unauthenticated traffic)
 router.get("/", getApprovedCourses);
-router.post("/create", verifyToken, requireRole("instructor"), createCourse);
-
-// 2. EXAM ROUTES
-router.get("/:courseId/exam", getExamForCourse); // Fixed your 404!
+router.get("/certificate/:certificateId", getCertificate);
+router.get("/:courseId/exam", getExamForCourse); 
 router.get("/exams/:examId/questions", getExamQuestions);
+router.get("/:courseId/syllabus", getFullCourseSyllabus);
+
+// 2. INSTRUCTOR ROUTES (Strictly locked to verified instructors)
+router.post("/create", verifyToken, requireRole("instructor"), createCourse);
+router.put("/:courseId/syllabus", verifyToken, requireRole("instructor"), updateCourseSyllabus);
+router.post("/:courseId/content", verifyToken, requireRole("instructor"), saveCourseContent);
+router.post("/exams/:examId/questions", verifyToken, requireRole("instructor"), addQuestionToExam);
+
+// 3. STUDENT ROUTES (Locked to authenticated users taking the exam)
+// Note: We do not require the "instructor" role here, as students must be able to submit.
 router.post("/exams/:examId/submit", verifyToken, submitExam);
 
-// 3. CURRICULUM ROUTES (Dynamic :courseId must go last)
-router.get("/:courseId/syllabus", getFullCourseSyllabus);
-router.put("/:courseId/syllabus", updateCourseSyllabus);
-router.post("/:courseId/content", saveCourseContent);
-router.post("/exams/:examId/questions", addQuestionToExam);
-
-router.get("/certificate/:certificateId", getCertificate);
 module.exports = router;
