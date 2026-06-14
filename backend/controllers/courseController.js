@@ -26,11 +26,12 @@ exports.createCourse = async (req, res) => {
         `;
         await connection.query(courseQuery, [course_id, instructor_id, title, scope, description, notes, category, price_etb, video_url, thumbnail_url, status]);
 
+        // FIX APPLIED: exams.title is NOT NULL. Explicitly defining it.
         const examQuery = `
-            INSERT INTO exams (exam_id, course_id, minimum_pass_score) 
-            VALUES (?, ?, ?)
+            INSERT INTO exams (exam_id, course_id, title, minimum_pass_score)
+            VALUES (?, ?, ?, ?)
         `;
-        await connection.query(examQuery, [exam_id, course_id, 70]);
+        await connection.query(examQuery, [exam_id, course_id, `${title} — Final Exam`, 70]);
 
         await connection.commit();
 
@@ -117,7 +118,6 @@ exports.getFullCourseSyllabus = async (req, res) => {
             materials: materials.filter(m => m.section_id === section.section_id)
         }));
 
-        // Your CoursePlayer.jsx expects res.data.course and res.data.syllabus
         res.status(200).json({
             success: true,
             course: course,
@@ -129,7 +129,6 @@ exports.getFullCourseSyllabus = async (req, res) => {
         console.error('Syllabus Assembly Error:', error);
         res.status(500).json({
             error: 'Failed to construct course hierarchy.',
-            // Surfaced to help diagnose prod-only failures (schema drift, bad data).
             detail: error.sqlMessage || error.message,
             code: error.code,
         });
@@ -201,7 +200,8 @@ exports.getCertificate = async (req, res) => {
         const [userRows] = await db.query("SELECT full_name FROM users WHERE user_id = ?", [cert.user_id]);
         const studentName = userRows.length > 0 ? userRows[0].full_name : "Unknown Student";
 
-       const [courseRows] = await db.query("SELECT * FROM courses WHERE course_id = ? AND status = 'approved'", [courseId]);
+        // FIX APPLIED: Using cert.course_id instead of undefined courseId
+        const [courseRows] = await db.query("SELECT * FROM courses WHERE course_id = ?", [cert.course_id]);
         const courseTitle = courseRows.length > 0 ? courseRows[0].title : "SkillAddis Course";
 
         res.status(200).json({
