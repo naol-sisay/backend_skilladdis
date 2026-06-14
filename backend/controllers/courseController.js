@@ -91,7 +91,7 @@ exports.getFullCourseSyllabus = async (req, res) => {
 
     try {
         // 1. Fetch Course Metadata
-        const [courseRows] = await db.query('SELECT * FROM courses WHERE course_id = ? AND status = "approved"', [courseId]);
+        const [courseRows] = await db.query("SELECT * FROM courses WHERE course_id = ? AND status = 'approved'", [courseId]);
         if (courseRows.length === 0) return res.status(404).json({ error: 'Course not found' });
         const course = courseRows[0];
 
@@ -127,7 +127,12 @@ exports.getFullCourseSyllabus = async (req, res) => {
 
     } catch (error) {
         console.error('Syllabus Assembly Error:', error);
-        res.status(500).json({ error: 'Failed to construct course hierarchy.' });
+        res.status(500).json({
+            error: 'Failed to construct course hierarchy.',
+            // Surfaced to help diagnose prod-only failures (schema drift, bad data).
+            detail: error.sqlMessage || error.message,
+            code: error.code,
+        });
     }
 };
 
