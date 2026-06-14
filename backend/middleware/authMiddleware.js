@@ -28,11 +28,12 @@ exports.verifyToken = (req, res, next) => {
     }
 };
 
-// Optional: Role-based middleware to strictly check for specific roles
-exports.requireRole = (requiredRole) => {
+// Role-based middleware. Accepts one or more roles; the request passes if the
+// user's role matches any of them, e.g. requireRole('instructor', 'admin').
+exports.requireRole = (...requiredRoles) => {
     return (req, res, next) => {
-        if (!req.user || req.user.role !== requiredRole) {
-            return res.status(403).json({ error: `Access denied. Requires ${requiredRole} privileges.` });
+        if (!req.user || !requiredRoles.includes(req.user.role)) {
+            return res.status(403).json({ error: `Access denied. Requires ${requiredRoles.join(' or ')} privileges.` });
         }
         next();
     };

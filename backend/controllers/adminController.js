@@ -250,3 +250,42 @@ exports.approveCourse = async (req, res) => {
         res.status(500).json({ error: 'Database error approving course.' });
     }
 };
+
+// ---------------------------------------------------------------------
+// Courses — full curriculum (sections + materials) for the admin editor.
+// Unlike the public getFullCourseSyllabus, this ignores course status so
+// admins can fix pending / rejected / archived courses too.
+// ---------------------------------------------------------------------
+exports.getCourseSyllabus = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [courseRows] = await db.query('SELECT * FROM courses WHERE course_id = ?', [id]);
+        if (courseRows.length === 0) return res.status(404).json({ error: 'Course not found.' });
+
+        const [sections] = await db.query(
+            'SELECT section_id, title FROM course_sections WHERE course_id = ? ORDER BY sequence_order ASC',
+            [id]
+        );
+
+        let materials = [];
+        if (sections.length > 0) {
+            const sectionIds = sections.map((s) => s.section_id);
+            const [mats] = await db.query(
+                'SELECT material_id, section_id, material_type AS type, title, content FROM course_materials WHERE section_id IN (?) ORDER BY sequence_order ASC',
+                [sectionIds]
+            );
+            materials = mats;
+        }
+
+        const syllabus = sections.map((section) => ({
+            section_id: section.section_id,
+            title: section.title,
+            materials: materials.filter((m) => m.section_id === section.section_id),
+        }));
+
+        res.status(200).json({ success: true, course: courseRows[0], syllabus });
+    } catch (error) {
+        console.error('admin getCourseSyllabus:', error);
+        res.status(500).json({ error: 'Failed to load course curriculum.', detail: error.sqlMessage || error.message });
+    }
+};
