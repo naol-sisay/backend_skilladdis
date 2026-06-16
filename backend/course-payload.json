@@ -1,69 +1,280 @@
 {
   "courseData": {
-    "title": "Relational Database Mastery",
-    "scope": "Beginner",
-    "description": "A practical, ground-up guide to designing and building scalable backend databases.",
-    "notes": "Ensure you have a basic understanding of web servers before starting.",
+    "title": "JavaScript Mastery: From Fundamentals to Advanced (Web Development)",
+    "scope": "Comprehensive (Beginner to Advanced)",
+    "description": "Complete JavaScript course covering everything from variables and data types to asynchronous programming, network requests, and DOM manipulation. Built for modern web developers. #webdev #js #code",
+    "notes": "This course includes both short topical lessons (Part 1-17) and a 3-hour full crash course. Focus on hands-on coding. Topics progress from fundamentals (variables, functions) to advanced concepts (Promises, Fetch API, BOM).",
     "category": "programming",
     "price_etb": 0,
-    "video_url": "https://www.youtube.com/watch?v=HXV3zeQKqGY",
-    "thumbnail_url": "https://img.youtube.com/vi/HXV3zeQKqGY/maxresdefault.jpg"
+    "video_url": "https://www.youtube.com/watch?v=vaScriptCourse",
+    "thumbnail_url": "https://img.youtube.com/vi/vaScriptCourse/maxresdefault.jpg"
   },
   "syllabus": [
     {
-      "title": "Section 1: The Foundations of SQL",
+      "title": "Section 1: JavaScript Fundamentals",
       "materials": [
         {
           "type": "video",
-          "title": "What is a Relational Database?",
-          "content": "https://www.youtube.com/watch?v=HXV3zeQKqGY"
+          "title": "Introduction to JS || Part -1",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_Part1"
         },
         {
           "type": "note",
-          "title": "Basic CRUD Operations Summary",
-          "content": "All database interactions boil down to Create (INSERT), Read (SELECT), Update (UPDATE), and Delete (DELETE)."
+          "title": "Course Overview and JavaScript Basics",
+          "content": "JavaScript is the programming language of the web. It allows you to make web pages interactive, manipulate the DOM, handle events, and communicate with servers. This introductory section covers what JS is, how to embed it in HTML (using <script> tags), and the basic console.log() output. You'll learn about the browser's developer console and how to run your first 'Hello World' script. No prior programming experience required, but basic HTML knowledge helps."
+        },
+        {
+          "type": "video",
+          "title": "JavaScript Variables || Part -2",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_Part2"
+        },
+        {
+          "type": "note",
+          "title": "Variables: var, let, const",
+          "content": "Variables are containers for storing data values. In modern JavaScript, you have three keywords: 'var' (function-scoped, legacy, avoid in new code), 'let' (block-scoped, can be reassigned), and 'const' (block-scoped, cannot be reassigned). Use 'const' by default, use 'let' only if you need to reassign. Never use 'var' in modern code. Variables follow naming rules: case-sensitive, can contain letters, digits, underscores, and dollar signs, but cannot start with a digit. CamelCase is standard (e.g., 'userName')."
+        },
+        {
+          "type": "video",
+          "title": "JavaScript Data Types || Part -3",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_Part3"
+        },
+        {
+          "type": "note",
+          "title": "Primitive and Reference Types",
+          "content": "JavaScript has 8 data types. 7 Primitives: String (text), Number (integers and decimals), Boolean (true/false), Undefined (declared but no value), Null (intentional empty), Symbol (unique identifiers), BigInt (large numbers). 1 Reference: Object (arrays, functions, dates, etc.). Use 'typeof' operator to check a variable's type. JavaScript is dynamically typed - variables can hold any type and can change types at runtime. Type coercion happens automatically when operators are used between different types."
+        },
+        {
+          "type": "video",
+          "title": "Expressions, Statements and Operators || Part -4",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_Part4"
+        },
+        {
+          "type": "note",
+          "title": "Operators and Program Structure",
+          "content": "An expression produces a value. A statement performs an action. Operators include: Arithmetic (+, -, *, /, %), Assignment (=, +=, -=), Comparison (==, ===, !=, !==, >, <), Logical (&&, AND; ||, OR; !, NOT), Ternary (condition ? expr1 : expr2), and typeof. Always use strict equality (===) and strict inequality (!==) to avoid type coercion bugs. The ternary operator provides a concise if-else. Operator precedence determines evaluation order."
+        },
+        {
+          "type": "video",
+          "title": "JavaScript Functions || Part -5",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_Part5"
+        },
+        {
+          "type": "note",
+          "title": "Functions: Declaration, Expression, and Arrow",
+          "content": "Functions are reusable blocks of code. Three main syntaxes: Function Declaration (function name() {} - hoisted), Function Expression (const name = function() {} - not hoisted), Arrow Function (const name = () => {} - concise, no own 'this'). Functions can take parameters and return values using the 'return' keyword. Functions without a return statement return 'undefined'. Parameters are placeholders; arguments are actual values passed. Default parameters allow fallback values (function greet(name = 'Guest'))."
         }
       ]
     },
     {
-      "title": "Section 2: Designing the Architecture",
+      "title": "Section 2: Control Flow and Data Structures",
       "materials": [
         {
           "type": "video",
-          "title": "Primary Keys and Foreign Keys",
-          "content": "https://www.youtube.com/watch?v=1057PTNAJOI"
+          "title": "Conditional and Looping || Part -6",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_Part6"
         },
         {
           "type": "note",
-          "title": "Cascading Deletions",
-          "content": "Using ON DELETE CASCADE ensures dependent records (like materials in a section) are wiped out if the parent record is deleted."
+          "title": "Control Flow: if, else, switch, for, while",
+          "content": "Conditionals control which code runs: 'if/else if/else' for branching logic; 'switch' for multiple discrete cases. Loops repeat code: 'for' (init; condition; increment) - most common; 'while' (condition) - runs while true; 'do/while' - runs at least once; 'for/of' (iterates values of arrays/strings); 'for/in' (iterates object properties - use with caution). 'break' exits a loop entirely; 'continue' skips to the next iteration. Avoid infinite loops by ensuring conditions eventually become false."
+        },
+        {
+          "type": "video",
+          "title": "JavaScript Object || Part -7",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_Part7"
+        },
+        {
+          "type": "note",
+          "title": "Objects: Key-Value Collections",
+          "content": "Objects store data in key-value pairs. Create with {} (object literal) or 'new Object()'. Access properties via dot notation (user.name) or bracket notation (user['name']) - bracket needed for dynamic keys or invalid identifier characters. Add/modify properties with assignment (user.age = 25). Delete with 'delete' operator. Use 'this' inside methods to refer to the current object. Objects are reference types - copying an object copies the reference, not the actual data. Use Object.assign() or spread ({...obj}) for shallow copies."
+        },
+        {
+          "type": "video",
+          "title": "JavaScript Arrays || Part -8",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_Part8"
+        },
+        {
+          "type": "note",
+          "title": "Arrays: Ordered Lists",
+          "content": "Arrays hold ordered collections of any data types. Create with [] (array literal) or 'new Array()'. Zero-indexed: first element is index 0. Common properties: .length (number of elements). Methods: push/pop (end), unshift/shift (start), splice (add/remove anywhere), slice (extract portion), indexOf/lastIndexOf (find position), includes (check existence). Iterate with for, for/of, or forEach(). Arrays are objects, so they are reference types. Modern array methods (map, filter, reduce) are covered in Higher Order Functions section."
+        },
+        {
+          "type": "video",
+          "title": "JavaScript OOP || Object Oriented Programming (Part -8 duplicate numbering)",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_OOP"
+        },
+        {
+          "type": "note",
+          "title": "Object Oriented JavaScript",
+          "content": "JavaScript uses prototype-based inheritance. ES6 introduced classes (syntactic sugar over prototypes). Create a class with 'class ClassName {}'. Constructor method runs on instantiation (new ClassName()). Methods defined inside class are added to the prototype. 'extends' keyword for inheritance. 'super()' calls parent constructor. Static methods belong to class, not instances. Getters/setters with 'get' and 'set' keywords. Private fields (experimental) use # prefix. OOP pillars: Encapsulation (group data + methods), Inheritance (child classes), Polymorphism (methods with same name different behavior)."
+        }
+      ]
+    },
+    {
+      "title": "Section 3: Advanced JavaScript",
+      "materials": [
+        {
+          "type": "video",
+          "title": "DOM (Document Object Model) || Part -10",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_DOM"
+        },
+        {
+          "type": "note",
+          "title": "Manipulating Web Pages with DOM",
+          "content": "The DOM is a tree representation of HTML. document object is the entry point. Selection methods: getElementById, querySelector (returns first), querySelectorAll (returns NodeList). Manipulate content: .textContent (plain text), .innerHTML (HTML markup), .value (form inputs). Manipulate attributes: getAttribute, setAttribute, removeAttribute. Manipulate classes: classList.add, .remove, .toggle, .contains. Create new elements: document.createElement, then append with appendChild or insertAdjacentHTML. Remove elements with .remove() or removeChild. Traverse DOM: parentNode, children, nextSibling, previousSibling."
+        },
+        {
+          "type": "video",
+          "title": "JS Events || Part -11",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_Events"
+        },
+        {
+          "type": "note",
+          "title": "Handling User Interactions",
+          "content": "Events signal user actions: click, submit, keydown, load, etc. Three ways to attach: HTML attributes (onclick='func()' - avoid), DOM property (element.onclick = func), addEventListener (preferred - allows multiple listeners). Event object passed to handler contains target, type, coordinates, etc. Event bubbling: event propagates up from target to ancestors. Event capturing: propagates down (useCapture parameter). Stop propagation with stopPropagation(). Prevent default behavior with preventDefault() (e.g., form submission). Event delegation: attach listener to parent to handle dynamic children. Common events: mouse (click, mouseover), keyboard (keydown, keyup), form (submit, change), window (load, resize)."
+        },
+        {
+          "type": "video",
+          "title": "BOM (Browser Object Model) || Part -12",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_BOM"
+        },
+        {
+          "type": "note",
+          "title": "Interacting with the Browser Window",
+          "content": "BOM provides objects to interact with the browser outside page content. window: global object (methods: alert, confirm, prompt). screen: display info (width, height). location: URL manipulation (.href, .reload(), .assign(), .replace()). history: navigation (.back(), .forward(), .go(n)). navigator: browser info (.userAgent, .language, .geolocation). Timing functions: setTimeout (run once after delay), setInterval (run repeatedly), clearTimeout/clearInterval to cancel. window.open opens new tabs/popups (often blocked by browsers). The 'this' keyword in global scope refers to window."
+        },
+        {
+          "type": "video",
+          "title": "Cookies, Local Storage, Session Storage || Part -12 (duplicate)",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_Storage"
+        },
+        {
+          "type": "note",
+          "title": "Client-Side Storage Mechanisms",
+          "content": "Three ways to store data in browser: Cookies (small, 4KB, sent to server with every request, expiring). LocalStorage (5-10MB, persists until manually deleted, never expires, not sent to server). SessionStorage (same size as LocalStorage, cleared when tab closes). Both Storage APIs: .setItem(key, value), .getItem(key), .removeItem(key), .clear(). Values stored as strings - use JSON.stringify/parse for objects/arrays. Check storage availability with typeof(Storage). Storage event fires when changes occur in another tab. Cookies accessed via document.cookie (string parsing required). Use LocalStorage for preferences, sessionStorage for one-time data, cookies for authentication tokens."
+        },
+        {
+          "type": "video",
+          "title": "JavaScript Date Object || Part -14",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_Date"
+        },
+        {
+          "type": "note",
+          "title": "Working with Dates and Times",
+          "content": "Date object represents a single moment. Create with new Date() (now), new Date('2024-01-01'), new Date(year, month, day) (month is 0-indexed: 0 = January). Get components: getFullYear(), getMonth() (0-11), getDate() (day of month), getDay() (0-6, Sunday=0), getHours(), getMinutes(), getSeconds(). Set with set* methods. Timestamps: getTime() (milliseconds since Jan 1, 1970), Date.now() (static). Formatting: toLocaleString(), toLocaleDateString(), toISOString(). Comparisons: use timestamps or <, > operators. Time zones: UTC methods (getUTCFullYear, etc.) for universal time. Moment.js is deprecated - use native Date or Temporal (future API)."
+        },
+        {
+          "type": "video",
+          "title": "JavaScript Higher Order Function || Part -15",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_HOF"
+        },
+        {
+          "type": "note",
+          "title": "Functional Programming: map, filter, reduce",
+          "content": "Higher Order Functions accept other functions as arguments or return functions. Array methods: forEach (iterate, no return), map (transform each element to new array), filter (keep elements passing test), reduce (accumulate to single value), sort (compare function), find (first matching element), some/ every (boolean checks). Callback functions receive (element, index, array). Chain methods: arr.filter(x => x>10).map(x => x*2). Reduce syntax: arr.reduce((accumulator, current) => accumulator + current, initialValue). Pure functions (no side effects) are preferred. Immutability: create new arrays instead of modifying originals."
+        },
+        {
+          "type": "video",
+          "title": "Asynchronous Programming || Part -16",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_Async"
+        },
+        {
+          "type": "note",
+          "title": "Callbacks, Promises, Async/Await",
+          "content": "JavaScript is single-threaded but non-blocking. Asynchronous operations (timers, network requests) don't block execution. Callbacks (functions passed to async functions) - leads to 'callback hell' (pyramid of doom). Promises represent future value: pending, fulfilled, rejected. Create with new Promise((resolve, reject) => {}). Methods: .then(result => {}) for success, .catch(error => {}) for errors, .finally() always runs. Promise chaining avoids nesting. Promise.all (waits for all), Promise.race (first to settle), Promise.allSettled (all results). Async/await (syntactic sugar over Promises): async function returns Promise, await pauses execution until Promise settles. Always wrap await in try/catch for error handling."
+        },
+        {
+          "type": "video",
+          "title": "Network Requests || Part -17",
+          "content": "https://www.youtube.com/watch?v=vaScriptCourse_Network"
+        },
+        {
+          "type": "note",
+          "title": "HTTP, AJAX, Fetch API, Axios",
+          "content": "Communicate with servers. HTTP methods: GET (retrieve), POST (create), PUT/PATCH (update), DELETE. XMLHttpRequest (old AJAX) - complex, avoid. Fetch API (modern, built-in): fetch(url, {method, headers, body}). Returns Promise. Parse JSON response with .json(). Handle errors: fetch only rejects on network failure, not HTTP errors (check response.ok). Headers: new Headers(), append(). POST example: fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data)}). Axios (third-party library, popular): axios.get(url), automatic JSON parsing, better error handling, interceptors, request cancellation. CORS (Cross-Origin Resource Sharing) restrictions apply - server must allow cross-origin requests."
         }
       ]
     }
   ],
   "questions": [
     {
-      "question_text": "What does the acronym CRUD stand for?",
-      "option_a": "Create, Read, Update, Delete",
-      "option_b": "Compile, Run, Undo, Deploy",
-      "option_c": "Create, Render, Upload, Destroy",
-      "option_d": "Compute, Read, Update, Deploy",
-      "correct_option": "option_a"
+      "question_text": "Which keyword should you use by default when declaring a variable that will NOT be reassigned?",
+      "option_a": "var",
+      "option_b": "let",
+      "option_c": "const",
+      "option_d": "variable",
+      "correct_option": "option_c"
     },
     {
-      "question_text": "Which SQL keyword is used to extract data from a table?",
-      "option_a": "GET",
-      "option_b": "SELECT",
-      "option_c": "EXTRACT",
-      "option_d": "PULL",
+      "question_text": "What does the strict equality operator (===) check?",
+      "option_a": "Only value equality, ignoring type",
+      "option_b": "Both value and type equality without type coercion",
+      "option_c": "Only type equality, ignoring value",
+      "option_d": "Reference equality for objects",
       "correct_option": "option_b"
     },
     {
-      "question_text": "What happens if ON DELETE CASCADE is applied and a parent row is deleted?",
-      "option_a": "The deletion is blocked.",
-      "option_b": "The database crashes.",
-      "option_c": "The corresponding child rows are also deleted.",
-      "option_d": "The child rows are set to NULL.",
+      "question_text": "Which array method creates a NEW array with transformed elements?",
+      "option_a": "forEach",
+      "option_b": "filter",
+      "option_c": "map",
+      "option_d": "reduce",
+      "correct_option": "option_c"
+    },
+    {
+      "question_text": "What is the purpose of the 'await' keyword in JavaScript?",
+      "option_a": "To pause the execution of an async function until a Promise settles",
+      "option_b": "To create a new Promise",
+      "option_c": "To throw an error in an async function",
+      "option_d": "To convert a callback to a Promise",
+      "correct_option": "option_a"
+    },
+    {
+      "question_text": "Which method is the MODERN way to attach multiple event listeners to an element?",
+      "option_a": "element.onclick = function",
+      "option_b": "element.addEventListener('click', function)",
+      "option_c": "element.attachEvent('onclick', function)",
+      "option_d": "element.on('click', function)",
+      "correct_option": "option_b"
+    },
+    {
+      "question_text": "What does the 'querySelectorAll' method return?",
+      "option_a": "A single element",
+      "option_b": "An array of elements",
+      "option_c": "A NodeList (array-like, not a true array)",
+      "option_d": "An HTMLCollection",
+      "correct_option": "option_c"
+    },
+    {
+      "question_text": "Which storage mechanism persists data even after the browser is closed and reopened, and is NOT sent to the server?",
+      "option_a": "Cookies",
+      "option_b": "SessionStorage",
+      "option_c": "LocalStorage",
+      "option_d": "Cache Storage",
+      "correct_option": "option_c"
+    },
+    {
+      "question_text": "What does the 'this' keyword refer to inside a regular function (not an arrow function) in the global scope of a browser?",
+      "option_a": "The function itself",
+      "option_b": "The window object",
+      "option_c": "undefined",
+      "option_d": "The parent object of the function",
+      "correct_option": "option_b"
+    },
+    {
+      "question_text": "Which HTTP method is typically used to retrieve data from a server?",
+      "option_a": "POST",
+      "option_b": "PUT",
+      "option_c": "GET",
+      "option_d": "DELETE",
+      "correct_option": "option_c"
+    },
+    {
+      "question_text": "What is the output of 'typeof null' in JavaScript?",
+      "option_a": "'null'",
+      "option_b": "'undefined'",
+      "option_c": "'object' (a known bug in JavaScript)",
+      "option_d": "'number'",
       "correct_option": "option_c"
     }
   ]

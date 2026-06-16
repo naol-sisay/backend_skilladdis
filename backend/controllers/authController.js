@@ -5,10 +5,12 @@ const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 
 exports.registerUser = async (req, res) => {
-    // 1. Grab the data sent from the React frontend
-    const { full_name, email, password, role } = req.body;
+    // 1. Grab the data sent from the React frontend.
+    //    Credentials are required; the profile fields are optional (the
+    //    signup wizard lets users skip them and fill them in later).
+    const { full_name, email, password, role, phone, headline, location, bio } = req.body;
 
-    // 2. Make sure they didn't leave anything blank
+    // 2. Make sure the required fields aren't blank
     if (!full_name || !email || !password || !role) {
         return res.status(400).json({ error: 'All fields are required' });
     }
@@ -18,15 +20,24 @@ exports.registerUser = async (req, res) => {
         // A "salt" adds random data before hashing so identical passwords look different
         const salt = await bcrypt.genSalt(10);
         const password_hash = await bcrypt.hash(password, salt);
-        
+
         // 4. Generate a unique ID
         const user_id = uuidv4();
 
-        // 5. Write the SQL query
-        const query = `INSERT INTO users (user_id, full_name, email, password_hash, role) VALUES (?, ?, ?, ?, ?)`;
-        
+        // 5. Write the SQL query — include the optional profile fields,
+        //    normalising blank/missing values to NULL.
+        const query = `INSERT INTO users
+                (user_id, full_name, email, password_hash, role, phone, headline, location, bio)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
         // 6. Execute the query in MySQL
-        await db.query(query, [user_id, full_name, email, password_hash, role]);
+        await db.query(query, [
+            user_id, full_name, email, password_hash, role,
+            phone?.trim() || null,
+            headline?.trim() || null,
+            location?.trim() || null,
+            bio?.trim() || null,
+        ]);
 
         // 7. Tell the frontend it worked
         res.status(201).json({ success: true, message: 'User registered successfully' });
