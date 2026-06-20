@@ -1,10 +1,10 @@
 const db = require('../config/db');
 /* =====================================================================
-   SkillAddis — Admin / Superadmin controller
+   SkillAddis - Admin / Superadmin controller
    All handlers below are mounted behind verifyToken + requireRole('admin').
    The MySQL schema uses ON DELETE CASCADE everywhere, so deleting a user
    or a course cleanly removes their dependent rows (courses, enrollments,
-   sections, materials, exams, certificates, progress…).
+   sections, materials, exams, certificates, progress...)
    ===================================================================== */
 
 // ---------------------------------------------------------------------
@@ -54,7 +54,7 @@ exports.getStats = async (req, res) => {
 };
 
 // ---------------------------------------------------------------------
-// Users — list (with optional ?search=) and per-user course/enrollment counts
+// Users - list (with optional ?search=) and per-user course/enrollment counts
 // ---------------------------------------------------------------------
 exports.getUsers = async (req, res) => {
     const { search = '' } = req.query;
@@ -80,7 +80,7 @@ exports.getUsers = async (req, res) => {
 };
 
 // ---------------------------------------------------------------------
-// Users — change role (student | instructor | admin)
+// Users - change role (student | instructor | admin)
 // ---------------------------------------------------------------------
 exports.updateUserRole = async (req, res) => {
     const { id } = req.params;
@@ -107,7 +107,7 @@ exports.updateUserRole = async (req, res) => {
 };
 
 // ---------------------------------------------------------------------
-// Users — delete (cascades to their courses / enrollments)
+// Users - delete (cascades to their courses / enrollments)
 // ---------------------------------------------------------------------
 exports.deleteUser = async (req, res) => {
     const { id } = req.params;
@@ -129,7 +129,7 @@ exports.deleteUser = async (req, res) => {
 };
 
 // ---------------------------------------------------------------------
-// Courses — list ALL (any status) with instructor name + enrollment count
+// Courses - list ALL (any status) with instructor name + enrollment count
 // ---------------------------------------------------------------------
 exports.getCourses = async (req, res) => {
     const { search = '' } = req.query;
@@ -138,7 +138,7 @@ exports.getCourses = async (req, res) => {
         const [rows] = await db.query(
             `SELECT
                 c.course_id, c.title, c.category, c.price_etb, c.status,
-                c.thumbnail_url, c.scope, c.description, c.created_at, c.instructor_id,
+                c.video_url, c.thumbnail_url, c.scope, c.description, c.created_at, c.instructor_id,
                 u.full_name AS instructor_name,
                 (SELECT COUNT(*) FROM enrollments e WHERE e.course_id = c.course_id) AS enrollments_count
              FROM courses c
@@ -155,11 +155,11 @@ exports.getCourses = async (req, res) => {
 };
 
 // ---------------------------------------------------------------------
-// Courses — edit (title, description, category, price, scope, status)
+// Courses - edit (title, description, category, price, scope, status)
 // ---------------------------------------------------------------------
 exports.updateCourse = async (req, res) => {
     const { id } = req.params;
-    const { title, description, category, price_etb, scope, status } = req.body;
+    const { title, description, category, price_etb, scope, status, video_url, thumbnail_url } = req.body;
     const allowedStatus = ['pending_approval', 'approved', 'rejected', 'archived'];
 
     if (status && !allowedStatus.includes(status)) {
@@ -177,6 +177,8 @@ exports.updateCourse = async (req, res) => {
         if (category !== undefined) set('category', category);
         if (price_etb !== undefined) set('price_etb', price_etb);
         if (scope !== undefined) set('scope', scope);
+        if (video_url !== undefined) set('video_url', video_url);
+        if (thumbnail_url !== undefined) set('thumbnail_url', thumbnail_url);
         if (status !== undefined) {
             set('status', status);
             if (status === 'approved') {
@@ -205,7 +207,7 @@ exports.updateCourse = async (req, res) => {
 };
 
 // ---------------------------------------------------------------------
-// Courses — delete (cascades to sections, materials, exams, enrollments…)
+// Courses - delete (cascades to sections, materials, exams, enrollments...)
 // ---------------------------------------------------------------------
 exports.deleteCourse = async (req, res) => {
     const { id } = req.params;
@@ -222,7 +224,7 @@ exports.deleteCourse = async (req, res) => {
 };
 
 // ---------------------------------------------------------------------
-// Courses — quick approve (kept for backward compatibility)
+// Courses - quick approve (kept for backward compatibility)
 // ---------------------------------------------------------------------
 exports.approveCourse = async (req, res) => {
     const { course_id } = req.body;
@@ -252,7 +254,7 @@ exports.approveCourse = async (req, res) => {
 };
 
 // ---------------------------------------------------------------------
-// Courses — full curriculum (sections + materials) for the admin editor.
+// Courses - full curriculum (sections + materials) for the admin editor.
 // Unlike the public getFullCourseSyllabus, this ignores course status so
 // admins can fix pending / rejected / archived courses too.
 // ---------------------------------------------------------------------
